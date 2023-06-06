@@ -52,6 +52,12 @@ jobs:
         with:
           name: ffmpeg
           path: artifacts
+  build-full-static:
+    name: full static build in docker
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
       - name: Set Envs
         run: |

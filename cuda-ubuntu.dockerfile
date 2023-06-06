@@ -1,10 +1,8 @@
 ARG VER=20.04
 
-FROM nvidia/cuda:11.8.0-devel-ubuntu${VER}
+FROM ubuntu:${VER} AS build
 
-ARG FFMPEG_VERSION
-
-ARG NVENC_VERSION
+ARG CUDAVER=11.8.0-1
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV NVIDIA_VISIBLE_DEVICES all
@@ -15,10 +13,16 @@ ENV NVENC_VERSION ${NVENC_VERSION}
 ENV VER ${VER}
 
 RUN apt-get update \
-    && apt-get -y --no-install-recommends install software-properties-common build-essential curl ca-certificates libva-dev libdevil-dev \
-    python3 python3-pip ninja-build git-core libass-dev libfreetype6-dev libunistring-dev wget \
-    && apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/* \
-    && update-ca-certificates
+    && apt-get -y --no-install-recommends install wget ca-certificates \
+    && update-ca-certificates \
+    && wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-keyring_1.0-1_all.deb \
+    && dpkg -i cuda-keyring_1.0-1_all.deb \
+    && apt-get update
+
+RUN apt-get -y --no-install-recommends install build-essential curl libva-dev python3 python-is-python3 ninja-build meson \
+    cuda="${CUDAVER}" \
+    && apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
+
 
 
 RUN pip3 install meson
