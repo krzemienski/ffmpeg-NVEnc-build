@@ -870,11 +870,11 @@ fi
 
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
   if command_exists "nvcc"; then
-    if build "nv-codec" "11.1.5.2"; then
-      download "https://github.com/FFmpeg/nv-codec-headers/releases/download/n11.1.5.2/nv-codec-headers-11.1.5.2.tar.gz"
+    if build "nv-codec" "12.1.14.0"; then
+      download "https://github.com/FFmpeg/nv-codec-headers/archive/refs/heads/master.zip"
       execute make PREFIX="${WORKSPACE}"
       execute make PREFIX="${WORKSPACE}/usr" install
-      build_done "nv-codec" "11.1.5.2"
+      build_done "nv-codec" "12.1.14.0"
     fi
     CFLAGS+=" -I/usr/local/cuda/include"
     LDFLAGS+=" -L/usr/local/cuda/lib64"
